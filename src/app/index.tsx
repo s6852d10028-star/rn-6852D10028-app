@@ -1,98 +1,106 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from "expo-router";
+import React, { useEffect } from "react";
+import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+const carlogo = require("@/assets/images/taxi.png");
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
+import {
+  Kanit_400Regular,
+  Kanit_700Bold,
+  useFonts,
+} from "@expo-google-fonts/kanit";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
+
+export default function Index() {
+  const [fontsLoaded] = useFonts({
+    Kanit_400Regular,
+    Kanit_700Bold,
+  });
+
+  //หน่วงหน้าจอตอนโหลด
+  useEffect(() => {
+    setTimeout(() => {
+      router.replace("/input");
+    }, 3000);
+  }, []);
+
   return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+    <View style={styles.container}>
+      <View style={styles.mainContent}>
+        <Image source={carlogo} style={styles.taxiIcon} />
+        <Text style={styles.title}>Taxi Fare Calculator</Text>
+        <Text style={styles.subtitle}>คำนวณค่าโดยสารแท็กซี่</Text>
+        <ActivityIndicator size="large" color="#df4b4b" style={styles.loader} />
+      </View>
 
-export default function HomeScreen() {
-  return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
-
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+      {/* ส่วนแสดงข้อมูลนักศึกษา */}
+      <View style={styles.footer}>
+        <Image
+          source={require("@/assets/images/ing.jpg")}
+          style={styles.profileImage}
+        />
+        <Text style={styles.footerText}>พัฒนาโดย</Text>
+        <Text style={styles.studentInfo}>
+          6825D10028 Rujirada Hongsingthong
+        </Text>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
+    backgroundColor: "#FFF",
+    justifyContent: "space-between",
+    paddingVertical: 40,
   },
-  safeArea: {
+  mainContent: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+  taxiIcon: {
+    width: 120,
+    height: 120,
+    marginBottom: 20,
+    resizeMode: "contain",
   },
   title: {
-    textAlign: 'center',
+    fontFamily: "Kanit-Bold",
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#1f01ff",
+    marginBottom: 5,
   },
-  code: {
-    textTransform: 'uppercase',
+  subtitle: {
+    fontFamily: "Kanit",
+    fontSize: 16,
+    color: "#4a4a4b",
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+  loader: {
+    marginTop: 30,
+  },
+  footer: {
+    alignItems: "center",
+  },
+  profileImage: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    marginBottom: 8,
+  },
+  footerText: {
+    fontSize: 12,
+    color: "#888",
+  },
+  studentInfo: {
+    fontSize: 12,
+    fontWeight: "bold",
+    color: "#555",
   },
 });
